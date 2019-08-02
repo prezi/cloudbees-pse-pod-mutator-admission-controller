@@ -1,0 +1,79 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  # Note: I am using fixed names here due to cert generation and the
+  # fact that this should always have only one instance in the cluster
+  name: cloudbees-pse-fixer
+  labels:
+    app: cloudbees-pse-fixer
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+        app.kubernetes.io/name: cloudbees-pse-fixer
+        app.kubernetes.io/instance: {{ .Release.Name }}    
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cloudbees-pse-fixer
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - cloudbees-pse-fixer
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: cloudbees-pse-fixer
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - -webhookCfgFile=/etc/webhook/config/webhookConfig.yaml
+            - -tlsCertFile=/etc/webhook/certs/cert.pem
+            - -tlsKeyFile=/etc/webhook/certs/key.pem
+            - -alsologtostderr
+            - -v=4
+            - 2>&1
+          volumeMounts:
+            - name: webhook-certs
+              mountPath: /etc/webhook/certs
+              readOnly: true
+            - name: webhook-config
+              mountPath: /etc/webhook/config
+
+          ports:
+            - name: https
+              containerPort: 443
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 443
+              scheme: HTTPS
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 443
+              scheme: HTTPS
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: cloudbees-pse-fixer-certs
+        - name: webhook-config
+          configMap:
+            name: cloudbees-pse-fixer
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

@@ -9,9 +9,9 @@ webhooks:
     clientConfig:
       service:
         name: cloudbees-pse-fixer
-        namespace: cloudbees-pse-fixer
+        namespace: {{ .Release.Namespace }}
         path: "/mutate"
-      caBundle: ${CA_BUNDLE}
+      caBundle: {{ .Values.ca_bundle }}
     rules:
       - operations: [ "CREATE" ]
         apiGroups: [""]

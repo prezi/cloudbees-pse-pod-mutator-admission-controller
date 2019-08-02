@@ -5,5 +5,4 @@ metadata:
 data:
   webhookConfig.yaml: |
     removeMountsToPaths:
-      - /var/lib/jenkins
-      - /xxx
+     {{- toYaml .Values.remove_mounts | nindent 6 }}

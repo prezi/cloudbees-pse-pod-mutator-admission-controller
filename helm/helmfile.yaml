@@ -1,0 +1,32 @@
+helmDefaults:
+  tillerNamespace: "kube-system"
+  tillerless: false
+  wait: true
+  verify: false
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+- name: cloudbees-fixer
+  chart: "./cloudbees-fixer"
+  version: 1.0
+  namespace: "cloudbees-pse-fixer"
+  installed: true
+  values:
+  - ca_bundle.yaml
+  - tolerations:
+    - key: "role"
+      operator: "Equal"
+      value: "privileged"
+      effect: "NoExecute"
+      tolerationSeconds: 300
+    resources:
+      limits:
+        cpu: 250m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    nodeSelector:
+      role: "privileged"

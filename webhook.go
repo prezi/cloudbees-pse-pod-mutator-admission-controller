@@ -213,6 +213,10 @@ func (whsvr *WebhookServer) mutate(ar *v1beta1.AdmissionReview) *v1beta1.Admissi
 	}
 }
 
+func (whsvr *WebhookServer) healthcheck(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Everything is all green!\n")
+}
+
 // Serve method for webhook server
 func (whsvr *WebhookServer) serve(w http.ResponseWriter, r *http.Request) {
 	var body []byte
