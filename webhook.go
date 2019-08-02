@@ -144,9 +144,7 @@ func removeWorkspaceVolume(pod *corev1.Pod, removeMountsToPaths []string) (patch
 	for container_id, container := range pod.Spec.Containers {
 		for volume_id, volumeMount := range container.VolumeMounts {
 			for _, path := range removeMountsToPaths {
-				glog.Info("Check container %s, mount path %s vs path %s", container.Name, volumeMount.Name, path)
 				if volumeMount.MountPath == path {
-					glog.Info("Found workspace wolume!!!") // TODO: proprerer logging
 					patch = append(patch, patchOperation{
 						Op:   "remove",
 						Path: fmt.Sprintf("/spec/containers/%d/volumeMounts/%d", container_id, volume_id),
