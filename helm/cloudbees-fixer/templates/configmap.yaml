@@ -5,4 +5,4 @@ metadata:
 data:
   webhookConfig.yaml: |
     removeMountsToPaths:
-     {{- toYaml .Values.remove_mounts | nindent 6 }}
+     {{- toYaml .Values.removeMounts | nindent 6 }}
