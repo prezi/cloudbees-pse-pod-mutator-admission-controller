@@ -1,22 +1,22 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sidecar-injector-webhook-deployment
+  name: cloudbees-pse-fixer
   labels:
-    app: sidecar-injector
+    app: cloudbees-pse-fixer
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
-        app: sidecar-injector
+        app: cloudbees-pse-fixer
     spec:
       containers:
-        - name: sidecar-injector
-          image: morvencao/sidecar-injector:v1
-          imagePullPolicy: IfNotPresent
+        - name: cloudbees-pse-fixer
+          image: 783721547467.dkr.ecr.us-east-1.amazonaws.com/jenkins-executor-helpers:admc
+          imagePullPolicy: Always
           args:
-            - -sidecarCfgFile=/etc/webhook/config/sidecarconfig.yaml
+            - -webhookCfgFile=/etc/webhook/config/webhookConfig.yaml
             - -tlsCertFile=/etc/webhook/certs/cert.pem
             - -tlsKeyFile=/etc/webhook/certs/key.pem
             - -alsologtostderr
@@ -31,7 +31,7 @@ spec:
       volumes:
         - name: webhook-certs
           secret:
-            secretName: sidecar-injector-webhook-certs
+            secretName: cloudbees-pse-fixer-certs
         - name: webhook-config
           configMap:
-            name: sidecar-injector-webhook-configmap
+            name: cloudbees-pse-fixer

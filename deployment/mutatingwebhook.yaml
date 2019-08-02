@@ -1,15 +1,15 @@
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: sidecar-injector-webhook-cfg
+  name: cloudbees-pse-fixer
   labels:
-    app: sidecar-injector
+    app: cloudbees-pse-fixer
 webhooks:
-  - name: sidecar-injector.morven.me
+  - name: cloudbees-pse-fixer.prezi.com
     clientConfig:
       service:
-        name: sidecar-injector-webhook-svc
-        namespace: default
+        name: cloudbees-pse-fixer
+        namespace: cloudbees-pse-fixer
         path: "/mutate"
       caBundle: ${CA_BUNDLE}
     rules:
@@ -17,6 +17,3 @@ webhooks:
         apiGroups: [""]
         apiVersions: ["v1"]
         resources: ["pods"]
-    namespaceSelector:
-      matchLabels:
-        sidecar-injector: enabled

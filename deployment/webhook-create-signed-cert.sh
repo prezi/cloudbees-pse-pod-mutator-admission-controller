@@ -46,9 +46,9 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-[ -z ${service} ] && service=sidecar-injector-webhook-svc
-[ -z ${secret} ] && secret=sidecar-injector-webhook-certs
-[ -z ${namespace} ] && namespace=default
+[ -z ${service} ] && service=cloudbees-pse-fixer
+[ -z ${secret} ] && secret=cloudbees-pse-fixer-certs
+[ -z ${namespace} ] && namespace=cloudbees-pse-fixer
 
 if [ ! -x "$(command -v openssl)" ]; then
     echo "openssl not found"
