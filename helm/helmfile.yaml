@@ -1,6 +1,6 @@
 helmDefaults:
   tillerNamespace: "kube-system"
-  tillerless: false
+  tillerless: true
   wait: true
   verify: false
   timeout: 600
@@ -14,19 +14,12 @@ releases:
   namespace: "cloudbees-pse-fixer"
   installed: true
   values:
+  # Ca bundle can be obtained from kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[].cluster.certificate-authority-data}'
   - ca_bundle.yaml
-  - tolerations:
-    - key: "role"
-      operator: "Equal"
-      value: "privileged"
-      effect: "NoExecute"
-      tolerationSeconds: 300
-    resources:
+  - resources:
       limits:
         cpu: 250m
         memory: 128Mi
       requests:
         cpu: 100m
         memory: 128Mi
-    nodeSelector:
-      role: "privileged"
