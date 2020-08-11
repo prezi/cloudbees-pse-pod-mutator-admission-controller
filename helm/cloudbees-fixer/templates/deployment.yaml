@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   # Note: I am using fixed names here due to cert generation and the
@@ -11,7 +11,7 @@ spec:
   selector:
     matchLabels:
         app.kubernetes.io/name: cloudbees-pse-fixer
-        app.kubernetes.io/instance: {{ .Release.Name }}    
+        app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
