@@ -1,12 +1,3 @@
-helmDefaults:
-  tillerNamespace: "kube-system"
-  tillerless: true
-  wait: true
-  verify: false
-  timeout: 600
-  recreatePods: true
-  force: true
-
 releases:
 - name: cloudbees-fixer
   chart: "./cloudbees-fixer"
