@@ -29,6 +29,18 @@ nodeSelector: {}
 
 tolerations: []
 
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: In
+          values:
+          - cloudbees-pse-fixer
+      topologyKey: "kubernetes.io/hostname"
+
+
 ca_bundle: ""
 
 removeMounts:
