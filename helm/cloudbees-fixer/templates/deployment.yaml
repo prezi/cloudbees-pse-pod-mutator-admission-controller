@@ -18,16 +18,10 @@ spec:
         app.kubernetes.io/name: cloudbees-pse-fixer
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- with .Values.affinity }}
       affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app.kubernetes.io/name
-                operator: In
-                values:
-                - cloudbees-pse-fixer
-            topologyKey: "kubernetes.io/hostname"
+          {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: cloudbees-pse-fixer
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
